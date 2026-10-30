@@ -1,0 +1,27 @@
+services:
+  lightshow:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "${SHOW_BIND_ADDRESS:-127.0.0.1}:8080:8080"
+    environment:
+      SHOW_USERNAME: "${SHOW_USERNAME:?Bitte SHOW_USERNAME in .env setzen}"
+      SHOW_PASSWORD: "${SHOW_PASSWORD:?Bitte SHOW_PASSWORD in .env setzen}"
+      SHOW_MAX_UPLOAD_MB: "${SHOW_MAX_UPLOAD_MB:-50}"
+      SHOW_MAX_DURATION: "${SHOW_MAX_DURATION:-600}"
+      SHOW_RETENTION_HOURS: "${SHOW_RETENTION_HOURS:-24}"
+      SHOW_MAX_JOBS: "3"
+    volumes:
+      - studio-data:/data
+    mem_limit: 2g
+    cpus: 2
+    pids_limit: 128
+    read_only: true
+    tmpfs:
+      - /tmp:size=128m,mode=1777
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 15s
+volumes:
+  studio-data:

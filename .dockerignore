@@ -1,0 +1,11 @@
+.git
+.tools
+.venv
+.env
+runtime
+archive
+LightShow
+cs-hall-os.pack
+**/__pycache__
+tests
+*.png

@@ -1,5 +1,35 @@
 # tesla-light-show
 
+## Weboberflaeche: Lightshow Studio
+
+MP3 hochladen, Fahrzeug und Effekte einstellen, ZIP mit MP3 + FSEQ herunterladen.
+Mit echter Licht-Zeitleiste und Audiovorschau, optionalen Bewegungen und
+automatischer Bereinigung. Lokal und als Docker-Anwendung fuer eigene Server.
+
+Auf diesem Windows-Rechner: `./start-studio.cmd`, danach `http://localhost:8080`.
+Installation, Serverbetrieb und Tests: [WEBSTUDIO.md](WEBSTUDIO.md).
+
+## Aktuelle Model-3-Shows (vor 2024)
+
+`LightShow/` enthaelt nur die aktuellen abspielbaren Dateipaare. BEARWOLF und
+Feuer Frei verwenden das Frequenzrollen-Profil v3: Hauptscheinwerfer nur bei
+erkannten Bassanschlaegen, Mitten auf Scheinwerfersegmente, Hoehen auf
+Seitenlichter, harmonische Begleitung auf Signatur/Ruecklichter. Der Bildschirm
+folgt Harmonie und Bass. Weitere Innenraumleuchten werden nicht angesteuert.
+
+Regenerieren (Python mit numpy erforderlich):
+
+```powershell
+python scripts/dense_show.py --song Rammstein-Feuer-Frei --palette fire
+python scripts/dense_show.py --song BEARWOLF-Владивосток --palette neon
+```
+
+Quellen und fruehere Varianten liegen in `archive/show-sources/`, aktuelle
+Pruefberichte in `archive/validation/`. Bewegungsbefehle werden aus der
+jeweiligen urspruenglichen Show unveraendert uebernommen. Die Bereinigung ist
+in `archive/cleanup-manifest.json` mit SHA-256-Pruefsummen dokumentiert.
+Die v3-Shows sind statisch geprueft; die Fahrzeugwirkung ist noch ungetestet.
+
 Generate Tesla custom light shows (`.fseq`) from any `.wav` audio file.
 
 This is a [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) skill and a

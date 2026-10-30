@@ -742,6 +742,7 @@ class Composer:
         * climax: every beat, full intensity, kick/snare differentiated
         * outro: every 4th beat, very soft ramps only
         """
+        self.rendered_beats = set()
         alt = 0
         for idx, beat in enumerate(self.beats):
             if beat >= self.n:
@@ -762,6 +763,8 @@ class Composer:
                 continue
             if section == "build" and (idx % 2) != 0 and not strong:
                 continue
+
+            self.rendered_beats.add(beat)
 
             if section == "intro":
                 # Beat-aligned swell: ramp PEAKS on the beat (not starts on it),
@@ -1075,12 +1078,12 @@ class Composer:
 
         # Avoid double-stimulating with the beat_layer: skip onsets that fall
         # within ±80 ms of an existing beat hit we already handled.
-        beat_set = set(self.beats)
+        beat_set = set(getattr(self, "rendered_beats", []))
         beat_skip_window = ms_to_frames(80, self.STEP_MS)
 
         # Pre-compute set of nearby beat frames for fast lookup
         nearby_beat = set()
-        for b in self.beats:
+        for b in beat_set:
             for off in range(-beat_skip_window, beat_skip_window + 1):
                 nearby_beat.add(b + off)
 
@@ -1096,7 +1099,7 @@ class Composer:
 
             if section == "intro":
                 # very sparse, very soft — only the strongest onsets
-                if hit_strength < 0.7:
+                if min(1.0, strength) < 0.7:
                     continue
                 ch = CH["L_OUTER_BEAM"] if (f // 50) % 2 == 0 else CH["R_OUTER_BEAM"]
                 self.pulse(ch, f, hold_ms=40, level=180)
